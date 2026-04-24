@@ -1,0 +1,29 @@
+# Logs
+*.log
+logs/
+*.pid
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp files
+*.tmp
+temp/
+
+# Config backups
+*.backup
+*.old
+
+# Test files
+test_*
+*_test.sh
+
+# Service files
+*.service.bak
