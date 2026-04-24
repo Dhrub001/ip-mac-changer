@@ -1,5 +1,66 @@
 # 🕵️ IP & MAC Changer
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Dhrub001/ip-mac-changer/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Bash](https://img.shields.io/badge/shell-bash-4EAA25.svg)](https://www.gnu.org/software/bash/)
+[![Tor](https://img.shields.io/badge/Tor-Integrated-7D4698.svg)](https://www.torproject.org/)
+[![Linux](https://img.shields.io/badge/platform-Linux-FCC624.svg)](https://www.linux.org/)
+[![Stars](https://img.shields.io/github/stars/Dhrub001/ip-mac-changer.svg)](https://github.com/Dhrub001/ip-mac-changer/stargazers)
+[![Issues](https://img.shields.io/github/issues/Dhrub001/ip-mac-changer.svg)](https://github.com/Dhrub001/ip-mac-changer/issues)
+
+> **Enterprise-grade IP rotation and MAC address spoofing automation for privacy research, penetration testing labs, and network security education.**
+
+---
+
+## 📖 The Story
+
+Every hacker movie has *that scene* — the protagonist's location jumps from New York to Tokyo to Berlin in seconds, their digital footprint vanishing like smoke. **"I'm in."**
+
+This tool is my attempt to bring that movie magic to real life. Built from weeks of research, late-night debugging sessions, and a genuine passion for network security, this project bridges the gap between Hollywood fantasy and practical cybersecurity.
+
+**This isn't just a script. It's proof that curiosity + persistence = mastery.**
+
+— *Dhrub Raj Giri (DRG)*
+
+---
+
+## 📌 Overview
+
+`ip-mac-changer` automates two fundamental anonymity techniques used in professional cybersecurity:
+
+| Technique | Implementation | Purpose |
+|-----------|---------------|---------|
+| **IP Rotation** | Tor `NEWNYM` signal via control port (9051) | Circuit-level anonymity |
+| **MAC Spoofing** | `iproute2` randomization (locally administered addresses) | Layer 2 identity masking |
+
+Built as a **production-ready systemd service** with configurable intervals, structured logging, and multi-distribution support.
+
+### Primary Use Cases
+
+- 🧪 **Penetration Testing Labs** - Realistic red team simulations
+- 🔬 **Privacy Research** - Tor behavior analysis and testing
+- 🎓 **Cybersecurity Education** - Hands-on Linux networking
+- 🛡️ **Network Anomaly Detection** - Testing monitoring systems
+
+---
+
+## ✨ Key Features
+
+| Category | Features |
+|----------|----------|
+| **IP Management** | 🔄 Automated Tor circuit renewal • 🌍 Geo-location tracking • 🛡️ SOCKS5 proxy routing |
+| **MAC Management** | 🎭 Random locally administered addresses • 🔁 Optional auto-restore • 📡 Interface auto-detection |
+| **Service Architecture** | 🖥️ systemd integration • 🔄 Auto-restart on failure • 📊 Persistent logging |
+| **Configuration** | ⚙️ Interval: 10-300 seconds • 🎬 Preset modes • 💾 Hot-reloadable config |
+| **Compatibility** | 🐧 8+ Linux distributions • 🔧 No external dependencies beyond Tor |
+
+---
+
+## 🧠 Technical Architecture
+
+### System Flow Diagram
+# 🕵️ IP & MAC Changer
+
 [![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/Dhrub001/ip-mac-changer)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Bash](https://img.shields.io/badge/shell-bash-red.svg)](https://www.gnu.org/software/bash/)
