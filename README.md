@@ -61,19 +61,25 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 
 ### Technical Flow
 Detect network interface (eth0, wlan0)
-
 Save original MAC address
-
 Ask user for interval
 
 Loop:
+
 ├── Generate random MAC address
+
 ├── Bring interface down
+
 ├── Apply new MAC address
+
 ├── Bring interface up
+
 ├── Release DHCP lease
+
 ├── Renew IP address
+
 ├── Display current MAC and IP
+
 └── Wait for interval
 
 Ctrl + C:
