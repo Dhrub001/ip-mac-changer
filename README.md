@@ -114,12 +114,13 @@ sudo ./ip-mac-pro
 Interval Options
 
 Choice	Interval	Mode
-1	10 seconds	Movie Mode (Very Fast)
 
-2	20 seconds	Turbo Mode
+1.	10 seconds	Movie Mode (Very Fast)
 
-3	30 seconds	Normal Mode (Recommended)
+2.	20 seconds	Turbo Mode
 
-4	60 seconds	Stealth Mode
+3.	30 seconds	Normal Mode (Recommended)
 
-5	Custom	Your own value
+4.	60 seconds	Stealth Mode
+
+5.	Custom	Your own value
