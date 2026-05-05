@@ -135,6 +135,9 @@ Choice	Interval	Mode
 ---
 🎬 Example Output
 
+🎬 Example Output
+text
+
 ╔═══════════════════════════════════════════════════════════╗
 ║        IP & MAC ADDRESS CHANGER v1.0                     ║
 ║         Author: Dhrub Raj Giri (DRG)                     ║
@@ -159,9 +162,7 @@ Choice	Interval	Mode
 [✓] Interval: 30 seconds - Normal Mode
 
 ════════════════════════════════════════════
-
 [🌀] CHANGE CYCLE #1
-
 ════════════════════════════════════════════
 [→] Changing MAC address...
 [✓] MAC changed: 02:ab:cd:ef:12:34
@@ -174,4 +175,108 @@ Choice	Interval	Mode
 
 [⏰] Next change in 30 seconds...
 
----
+🔍 Verification
+Watch MAC Changes
+bash
+
+watch -n 1 'ip link show eth0 | grep ether'
+
+Watch IP Changes
+bash
+
+watch -n 1 'ip -4 addr show eth0 | grep -oP "(?<=inet\s)\d+(\.\d+){3}"'
+
+Verify MAC Restore on Exit
+bash
+
+# Check original MAC
+ip link show eth0 | grep ether
+
+# Run tool, then press Ctrl+C
+
+# Check MAC again
+ip link show eth0 | grep ether
+
+🛠️ Troubleshooting
+MAC Change Failed
+bash
+
+# Find your interface name
+ip link show
+
+# Try manual change
+sudo ip link set dev eth0 down
+sudo ip link set dev eth0 address 02:11:22:33:44:55
+sudo ip link set dev eth0 up
+
+DHCP Issues
+bash
+
+# Install DHCP client
+sudo apt install isc-dhcp-client
+
+# Manually renew IP
+sudo dhclient -r eth0
+sudo dhclient eth0
+
+Permission Error
+bash
+
+# Always use sudo
+sudo ./ip-mac-pro
+
+📁 Project Structure
+text
+
+ip-mac-changer/
+├── ip-mac-pro     # Main script
+├── README.md      # Documentation
+├── LICENSE        # MIT License
+└── .gitignore     # Git exclusions
+
+👤 Author
+
+Dhrub Raj Giri (DRG)
+
+    🔐 Cybersecurity Enthusiast
+
+    💻 Network Engineer
+
+    🎬 Inspired by hacker movies
+
+https://img.shields.io/badge/GitHub-Dhrub001-181717?style=flat&logo=github
+⭐ Support
+
+If this tool made you feel like a movie hacker:
+
+    ⭐ Star this repository
+
+    🐛 Report issues
+
+    🔄 Share with others
+
+⚠️ Disclaimer
+
+This tool is for educational and authorized testing only.
+
+Do NOT use on:
+
+    Public networks without permission
+
+    Systems you do not own
+
+The author is not responsible for misuse.
+🙏 Acknowledgments
+
+    Seniors & mentors for guidance
+
+    Open-source community for tools
+
+    Hacker movies for inspiration
+
+📄 License
+
+MIT License — see LICENSE file for details.
+
+Made with ❤️ by Dhrub Raj Giri (DRG)
+"HACK THE PLANET!" 🌍
