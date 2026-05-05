@@ -29,7 +29,6 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 | 🎬 Simulation | Experience hacker-style operations |
 | 🛡️ Practice | Basic privacy experimentation |
 ---
----
 ## ⚠️ Scope & Limitations
 
 ### ✔ What it DOES
@@ -52,13 +51,10 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 |------------|---------|-------------|
 | MAC Address | Hardware identity | Randomized |
 | IP Address | Network location | Renewed |
-
 ---
 ### Technical Flow
 Detect network interface (eth0, wlan0)
-
 Save original MAC address
-
 Ask user for interval
 
 Loop:
@@ -86,7 +82,6 @@ Ctrl + C:
 ### Required Packages
 - `iproute2` (for MAC manipulation)
 - `isc-dhcp-client` (for IP renewal)
-
 ---
 
 ## 🚀 Installation
@@ -96,8 +91,6 @@ chmod +x ip-mac-pro
 sudo ./ip-mac-pro
 
 🎮 Usage
-
-
 sudo ./ip-mac-pro
 
 Interval Options
@@ -146,21 +139,15 @@ text
    IP:  192.168.1.105
 
 [⏰] Next change in 30 seconds...
-
+---
 🔍 Verification
 Watch MAC Changes
-bash
-
 watch -n 1 'ip link show eth0 | grep ether'
 
 Watch IP Changes
-bash
-
 watch -n 1 'ip -4 addr show eth0 | grep -oP "(?<=inet\s)\d+(\.\d+){3}"'
 
 Verify MAC Restore on Exit
-bash
-
 # Check original MAC
 ip link show eth0 | grep ether
 
@@ -168,11 +155,9 @@ ip link show eth0 | grep ether
 
 # Check MAC again
 ip link show eth0 | grep ether
-
+---
 🛠️ Troubleshooting
 MAC Change Failed
-bash
-
 # Find your interface name
 ip link show
 
@@ -182,8 +167,6 @@ sudo ip link set dev eth0 address 02:11:22:33:44:55
 sudo ip link set dev eth0 up
 
 DHCP Issues
-bash
-
 # Install DHCP client
 sudo apt install isc-dhcp-client
 
@@ -192,14 +175,10 @@ sudo dhclient -r eth0
 sudo dhclient eth0
 
 Permission Error
-bash
-
 # Always use sudo
 sudo ./ip-mac-pro
-
+---
 📁 Project Structure
-text
-
 ip-mac-changer/
 ├── ip-mac-pro     # Main script
 ├── README.md      # Documentation
@@ -236,7 +215,7 @@ Do NOT use on:
     Public networks without permission
 
     Systems you do not own
-
+-
 The author is not responsible for misuse.
 🙏 Acknowledgments
 
@@ -245,34 +224,11 @@ The author is not responsible for misuse.
     Open-source community for tools
 
     Hacker movies for inspiration
-
+---
 📄 License
 
 MIT License — see LICENSE file for details.
 
 Made with ❤️ by Dhrub Raj Giri (DRG)
 "HACK THE PLANET!" 🌍
-
-⬆ Back to Top
-text
-
-
 ---
-
-## ✅ **What I Fixed**
-
-| Issue | Fix |
-|-------|-----|
-| Missing badge links | Added proper GitHub links |
-| Missing interval options table | Added clear table |
-| Missing demo banner | Added complete ASCII output |
-| Missing back to top link | Added at bottom |
-| Code block formatting | Fixed all markdown |
-
----
-
-## 🚀 **This README is 100% ready for GitHub!**
-
-**Just copy and paste this entire code block into your `README.md` file.**
-
-This response is AI-generated, for reference only.
