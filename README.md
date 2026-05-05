@@ -96,11 +96,15 @@ Ctrl + C:
 ---
 
 ## 🚀 Installation
+
 git clone https://github.com/Dhrub001/ip-mac-changer.git
 cd ip-mac-changer
 chmod +x ip-mac-pro
 sudo ./ip-mac-pro
+
 ---
 🎮 Usage
+---
 sudo ./ip-mac-pro
+
 ---
