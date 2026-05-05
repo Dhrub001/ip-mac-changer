@@ -8,7 +8,7 @@
 > **"HACK THE PLANET!"** 🌍  
 > Automate MAC address spoofing and DHCP IP renewal at custom intervals.
 
-
+---
 ## 📖 The Story
 
 Growing up watching hacker movies like *Mr. Robot*, *Whoami*, and *Sneakers*, I was fascinated by how attackers could instantly change their digital identity and disappear.
@@ -18,7 +18,6 @@ That iconic line — **"I'm in."** — inspired me to explore networking and cyb
 After weeks of hands-on practice, debugging, and learning from seniors (with some AI assistance), I built this tool to simulate "movie-style" identity switching in a real Linux environment.
 
 ⚠️ This is **not true anonymity** — it is a **learning and experimentation tool**.
-
 ---
 
 ## 🎯 Purpose
@@ -29,9 +28,8 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 | 🔬 Testing | Observe network behavior |
 | 🎬 Simulation | Experience hacker-style operations |
 | 🛡️ Practice | Basic privacy experimentation |
-
 ---
-
+---
 ## ⚠️ Scope & Limitations
 
 ### ✔ What it DOES
@@ -44,7 +42,6 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 - Provide anonymity
 - Bypass ISP tracking
 - Replace VPN / Tor
-
 ---
 
 ## ⚙️ How It Works
