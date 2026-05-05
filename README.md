@@ -83,6 +83,7 @@ Loop:
 └── Wait for interval
 
 Ctrl + C:
+
 ├── Stop execution
 ├── Restore original MAC
 └── Exit safely
