@@ -57,6 +57,8 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 | MAC Address | Hardware identity | Randomized |
 | IP Address | Network location | Renewed |
 
+---
+
 ### Technical Flow
 Detect network interface (eth0, wlan0)
 
@@ -78,8 +80,6 @@ Ctrl + C:
 ├── Stop execution
 ├── Restore original MAC
 └── Exit safely
----
-
 
 ---
 
