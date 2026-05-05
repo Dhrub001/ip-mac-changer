@@ -1,10 +1,3 @@
-## ✅ **Your README is ALMOST PERFECT! Just 2 small fixes needed**
-
-Here's your **COMPLETE, READY-TO-USE README.md** - fixed and polished:
-
----
-
-```markdown
 # 🕵️ IP & MAC Changer
 
 [![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/Dhrub001/ip-mac-changer)
@@ -64,28 +57,29 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 | MAC Address | Hardware identity | Randomized |
 | IP Address | Network location | Renewed |
 
+### Technical Flow
+Detect network interface (eth0, wlan0)
+
+Save original MAC address
+
+Ask user for interval
+
+Loop:
+├── Generate random MAC address
+├── Bring interface down
+├── Apply new MAC address
+├── Bring interface up
+├── Release DHCP lease
+├── Renew IP address
+├── Display current MAC and IP
+└── Wait for interval
+
+Ctrl + C:
+├── Stop execution
+├── Restore original MAC
+└── Exit safely
 ---
 
-### Technical Flow
-
-```
-1. Detect network interface (eth0, wlan0)
-2. Save original MAC address
-3. Ask user for interval
-4. Loop:
-   ├── Generate random MAC address
-   ├── Bring interface down
-   ├── Apply new MAC address
-   ├── Bring interface up
-   ├── Release DHCP lease
-   ├── Renew IP address
-   ├── Display current MAC and IP
-   └── Wait for interval
-5. Ctrl + C:
-   ├── Stop execution
-   ├── Restore original MAC
-   └── Exit safely
-```
 
 ---
 
@@ -103,188 +97,13 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 
 ## 🚀 Installation
 
-
+```bash
 git clone https://github.com/Dhrub001/ip-mac-changer.git
 cd ip-mac-changer
 chmod +x ip-mac-pro
 sudo ./ip-mac-pro
-```
-
 ---
-
-## 🎮 Usage
-
-
+---
+🎮 Usage
 sudo ./ip-mac-pro
-```
-
-### Interval Options
-
-| Choice | Interval | Mode |
-|--------|----------|------|
-| 1 | 10 seconds | Movie Mode (Very Fast) |
-| 2 | 20 seconds | Turbo Mode |
-| 3 | 30 seconds | Normal Mode (Recommended) |
-| 4 | 60 seconds | Stealth Mode |
-| 5 | Custom | Your own value |
-
----
-
-## 🎬 Example Output
-
-```
-╔═══════════════════════════════════════════════════════════╗
-║        IP & MAC ADDRESS CHANGER v1.0                     ║
-║         Author: Dhrub Raj Giri (DRG)                     ║
-║              "HACK THE PLANET!"                          ║
-╚═══════════════════════════════════════════════════════════╝
-
-[i] Interface: eth0
-[i] Original MAC: 00:0c:29:30:94:72
-
-╔════════════════════════════════════════════════════════╗
-║              SELECT CHANGE INTERVAL                    ║
-╚════════════════════════════════════════════════════════╝
-
-    1) 10 seconds  - Movie Mode (Very Fast)
-    2) 20 seconds  - Turbo Mode
-    3) 30 seconds  - Normal Mode (Recommended)
-    4) 60 seconds  - Stealth Mode
-    5) Custom      - Enter your own value
-
-[?] Enter your choice [1-5]: 3
-
-[✓] Interval: 30 seconds - Normal Mode
-
-════════════════════════════════════════════
-[🌀] CHANGE CYCLE #1
-════════════════════════════════════════════
-[→] Changing MAC address...
-[✓] MAC changed: 02:ab:cd:ef:12:34
-[→] Renewing IP address (DHCP)...
-[✓] New IP: 192.168.1.105
-
-📡 Current Status:
-   MAC: 02:ab:cd:ef:12:34
-   IP:  192.168.1.105
-
-[⏰] Next change in 30 seconds...
-```
-
----
-
-## 🔍 Verification
-
-### Watch MAC Changes
-
-
-watch -n 1 'ip link show eth0 | grep ether'
-```
-
-### Watch IP Changes
-
-
-watch -n 1 'ip -4 addr show eth0 | grep -oP "(?<=inet\s)\d+(\.\d+){3}"'
-```
-
-### Verify MAC Restore on Exit
-
-
-# Check original MAC
-ip link show eth0 | grep ether
-
-# Run tool, then press Ctrl+C
-
-# Check MAC again
-ip link show eth0 | grep ether
-```
-
----
-
-## 🛠️ Troubleshooting
-
-### MAC Change Failed
-
-
-# Find your interface name
-ip link show
-
-# Try manual change
-sudo ip link set dev eth0 down
-sudo ip link set dev eth0 address 02:11:22:33:44:55
-sudo ip link set dev eth0 up
-```
-
-### DHCP Issues
-
-
-# Install DHCP client
-sudo apt install isc-dhcp-client
-
-# Manually renew IP
-sudo dhclient -r eth0
-sudo dhclient eth0
-```
-
-### Permission Error
-
-
-# Always use sudo
-sudo ./ip-mac-pro
-```
-
----
-
-## 📁 Project Structure
-
-```
-ip-mac-changer/
-├── ip-mac-pro     # Main script
-├── README.md      # Documentation
-├── LICENSE        # MIT License
-└── .gitignore     # Git exclusions
-```
-
----
-
-## 👤 Author
-
-**Dhrub Raj Giri (DRG)**
-
-- 🔐 Cybersecurity Enthusiast
-- 💻 Network Engineer
-- 🎬 Inspired by hacker movies
-
-[![GitHub](https://img.shields.io/badge/GitHub-Dhrub001-181717?style=flat&logo=github)](https://github.com/Dhrub001)
-
----
-
-## ⭐ Support
-
-If this tool made you feel like a movie hacker:
-
-- ⭐ **Star** this repository
-- 🐛 **Report** issues
-- 🔄 **Share** with others
-
----
-
-## ⚠️ Disclaimer
-
-This tool is for **educational and authorized testing only**.
-
-Do NOT use on:
-- Public networks without permission
-- Systems you do not own
-
-The author is not responsible for misuse.
-
----
-
-## 🙏 Acknowledgments
-
-- Seniors & mentors for guidance
-- Open-source community for tools
-- Hacker movies for inspiration
-
 ---
