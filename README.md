@@ -103,7 +103,7 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 
 ## 🚀 Installation
 
-```bash
+
 git clone https://github.com/Dhrub001/ip-mac-changer.git
 cd ip-mac-changer
 chmod +x ip-mac-pro
@@ -114,7 +114,7 @@ sudo ./ip-mac-pro
 
 ## 🎮 Usage
 
-```bash
+
 sudo ./ip-mac-pro
 ```
 
@@ -177,19 +177,19 @@ sudo ./ip-mac-pro
 
 ### Watch MAC Changes
 
-```bash
+
 watch -n 1 'ip link show eth0 | grep ether'
 ```
 
 ### Watch IP Changes
 
-```bash
+
 watch -n 1 'ip -4 addr show eth0 | grep -oP "(?<=inet\s)\d+(\.\d+){3}"'
 ```
 
 ### Verify MAC Restore on Exit
 
-```bash
+
 # Check original MAC
 ip link show eth0 | grep ether
 
@@ -205,7 +205,7 @@ ip link show eth0 | grep ether
 
 ### MAC Change Failed
 
-```bash
+
 # Find your interface name
 ip link show
 
@@ -217,7 +217,7 @@ sudo ip link set dev eth0 up
 
 ### DHCP Issues
 
-```bash
+
 # Install DHCP client
 sudo apt install isc-dhcp-client
 
@@ -228,7 +228,7 @@ sudo dhclient eth0
 
 ### Permission Error
 
-```bash
+
 # Always use sudo
 sudo ./ip-mac-pro
 ```
@@ -288,12 +288,3 @@ The author is not responsible for misuse.
 - Hacker movies for inspiration
 
 ---
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) file for details.
-
----
-
-**Made with ❤️ by Dhrub Raj Giri (DRG)**  
-*"HACK THE PLANET!"* 🌍
