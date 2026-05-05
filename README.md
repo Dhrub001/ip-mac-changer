@@ -134,19 +134,17 @@ Choice	Interval	Mode
 
 ---
 🎬 Example Output
-╔═══════════════════════════════════════════════════════════╗
-║        IP & MAC ADDRESS CHANGER v1.0                     ║
-║         Author: Dhrub Raj Giri (DRG)                     ║
-║              "HACK THE PLANET!"                          ║
-╚═══════════════════════════════════════════════════════════╝
+
+║        IP & MAC ADDRESS CHANGER v1.0                     
+║         Author: Dhrub Raj Giri (DRG)                     
+║              "HACK THE PLANET!"                          
+
 
 [i] Interface: eth0
 [i] Original MAC: 00:0c:29:30:94:72
 
-╔════════════════════════════════════════════════════════╗
-║              SELECT CHANGE INTERVAL                    ║
-║                                                        ║
-╚════════════════════════════════════════════════════════╝
+║              SELECT CHANGE INTERVAL                    
+
 
     1) 10 seconds  - Movie Mode (Very Fast)
     2) 20 seconds  - Turbo Mode
@@ -159,7 +157,9 @@ Choice	Interval	Mode
 [✓] Interval: 30 seconds - Normal Mode
 
 ════════════════════════════════════════════
+
 [🌀] CHANGE CYCLE #1
+
 ════════════════════════════════════════════
 [→] Changing MAC address...
 [✓] MAC changed: 02:ab:cd:ef:12:34
