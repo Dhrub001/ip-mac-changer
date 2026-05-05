@@ -17,15 +17,20 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 
 ⚠️ This is **not true anonymity** — it is a **learning and experimentation tool**.
 ---
+
 ## 🎯 Purpose
+
 | Purpose | Description |
 |---------|-------------|
 | 🎓 Learning | Understand MAC spoofing & DHCP |
 | 🔬 Testing | Observe network behavior |
 | 🎬 Simulation | Experience hacker-style operations |
 | 🛡️ Practice | Basic privacy experimentation |
+
 ---
+
 ## ⚠️ Scope & Limitations
+
 ### ✔ What it DOES
 - Changes MAC address (Layer 2 identity)
 - Renews IP via DHCP
@@ -46,8 +51,10 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 |------------|---------|-------------|
 | MAC Address | Hardware identity | Randomized |
 | IP Address | Network location | Renewed |
+
 ---
 ### Technical Flow
+
 Detect network interface (eth0, wlan0)
 Save original MAC address
 Ask user for interval
