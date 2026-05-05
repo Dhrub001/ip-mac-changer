@@ -186,43 +186,29 @@ ip-mac-changer/
 └── .gitignore     # Git exclusions
 
 👤 Author
-
 Dhrub Raj Giri (DRG)
-
     🔐 Cybersecurity Enthusiast
-
     💻 Network Engineer
-
     🎬 Inspired by hacker movies
-
 https://img.shields.io/badge/GitHub-Dhrub001-181717?style=flat&logo=github
+---
 ⭐ Support
-
 If this tool made you feel like a movie hacker:
-
     ⭐ Star this repository
-
     🐛 Report issues
-
     🔄 Share with others
-
+---
 ⚠️ Disclaimer
-
 This tool is for educational and authorized testing only.
 
 Do NOT use on:
-
     Public networks without permission
-
     Systems you do not own
--
+---
 The author is not responsible for misuse.
 🙏 Acknowledgments
-
     Seniors & mentors for guidance
-
     Open-source community for tools
-
     Hacker movies for inspiration
 ---
 📄 License
