@@ -135,9 +135,9 @@ Choice	Interval	Mode
 ---
 🎬 Example Output
 ╔═══════════════════════════════════════════════════════════╗
-║        IP & MAC ADDRESS CHANGER v1.0                      ║
-║         Author: Dhrub Raj Giri (DRG)                      ║
-║              "HACK THE PLANET!"                           ║
+║        IP & MAC ADDRESS CHANGER v1.0                     ║
+║         Author: Dhrub Raj Giri (DRG)                     ║
+║              "HACK THE PLANET!"                          ║
 ╚═══════════════════════════════════════════════════════════╝
 
 [i] Interface: eth0
@@ -236,6 +236,7 @@ If this tool made you feel like a movie hacker:
 
     🔄 Share with others
 
+---
 ⚠️ Disclaimer
 
 This tool is for educational and authorized testing only.
@@ -247,6 +248,8 @@ Do NOT use on:
     Systems you do not own
 
 The author is not responsible for misuse.
+
+---
 🙏 Acknowledgments
 
     Seniors & mentors for guidance
@@ -255,8 +258,8 @@ The author is not responsible for misuse.
 
     Hacker movies for inspiration
 
+---
 📄 License
-
 MIT License — see LICENSE file for details.
 
 Made with ❤️ by Dhrub Raj Giri (DRG)
