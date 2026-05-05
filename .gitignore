@@ -1,29 +1,73 @@
-# Logs
+# ===============================
+# Logs & Runtime Files
+# ===============================
 *.log
 logs/
 *.pid
+*.pid.lock
 
-# OS files
+# ===============================
+# Temporary Files
+# ===============================
+*.tmp
+*.temp
+temp/
+tmp/
+
+# ===============================
+# OS Generated Files
+# ===============================
 .DS_Store
 Thumbs.db
 
-# IDE files
+# ===============================
+# Editor / IDE Files
+# ===============================
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# Temp files
-*.tmp
-temp/
-
-# Config backups
+# ===============================
+# Backup Files
+# ===============================
 *.backup
+*.bak
 *.old
 
-# Test files
+# ===============================
+# Test Files
+# ===============================
 test_*
 *_test.sh
 
-# Service files
+# ===============================
+# Shell Script Artifacts
+# ===============================
+*.out
+*.err
+
+# ===============================
+# Network / Tool Specific
+# ===============================
+dhclient.leases
+*.pcap
+*.cap
+
+# ===============================
+# Build / Binary Files
+# ===============================
+*.o
+*.bin
+
+# ===============================
+# Environment Files
+# ===============================
+.env
+.env.*
+
+# ===============================
+# System Service Files (optional backups)
+# ===============================
 *.service.bak
