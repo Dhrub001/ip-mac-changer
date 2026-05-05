@@ -56,7 +56,9 @@ After weeks of hands-on practice, debugging, and learning from seniors (with som
 ### Technical Flow
 
 Detect network interface (eth0, wlan0)
+
 Save original MAC address
+
 Ask user for interval
 
 Loop:
@@ -102,6 +104,7 @@ Choice	Interval	Mode
 3	30 seconds	Normal Mode (Recommended)
 4	60 seconds	Stealth Mode
 5	Custom	Your own value
+---
 🎬 Example Output
 ╔═══════════════════════════════════════════════════════════╗
 ║        IP & MAC ADDRESS CHANGER v1.0                     ║
