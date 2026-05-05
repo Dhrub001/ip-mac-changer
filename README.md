@@ -185,19 +185,6 @@ sudo dhclient eth0
 sudo ./ip-mac-pro
 ```
 
----
-
-## 📁 Project Structure
-
-```
-ip-mac-changer/
-├── ip-mac-pro
-├── README.md
-├── LICENSE
-└── .gitignore
-```
-
----
 
 ## 👤 Author
 
@@ -206,22 +193,6 @@ Cybersecurity Enthusiast
 Network Engineer
 
 GitHub: [https://github.com/Dhrub001](https://github.com/Dhrub001)
-
----
-
-## ⚠️ Disclaimer
-
-This tool is for **educational and authorized testing only**.
-
-Do not use on networks you do not own or have permission to test.
-
----
-
-## 📄 License
-
-MIT License
-
-```
 
 ---
 
