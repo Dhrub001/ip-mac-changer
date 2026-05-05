@@ -161,6 +161,7 @@ Choice	Interval	Mode
 [🌀] CHANGE CYCLE #1
 
 ════════════════════════════════════════════
+
 [→] Changing MAC address...
 [✓] MAC changed: 02:ab:cd:ef:12:34
 [→] Renewing IP address (DHCP)...
