@@ -94,22 +94,28 @@ Choice	Interval	Mode
 5	Custom	Your own value
 🎬 Example Output
 ╔═══════════════════════════════════════════════════════════╗
-║        IP & MAC ADDRESS CHANGER v1.0                      ║
-║         Author: Dhrub Raj Giri (DRG)                      ║
-║              "HACK THE PLANET!"                           ║
+║        IP & MAC ADDRESS CHANGER v1.0                     ║
+║         Author: Dhrub Raj Giri (DRG)                     ║
+║              "HACK THE PLANET!"                          ║
 ╚═══════════════════════════════════════════════════════════╝
+
 [i] Interface: eth0
 [i] Original MAC: 00:0c:29:30:94:72
+
 ╔════════════════════════════════════════════════════════╗
 ║              SELECT CHANGE INTERVAL                    ║
 ╚════════════════════════════════════════════════════════╝
+
     1) 10 seconds  - Movie Mode (Very Fast)
     2) 20 seconds  - Turbo Mode
     3) 30 seconds  - Normal Mode (Recommended)
     4) 60 seconds  - Stealth Mode
     5) Custom      - Enter your own value
+
 [?] Enter your choice [1-5]: 3
+
 [✓] Interval: 30 seconds - Normal Mode
+
 ════════════════════════════════════════════
 [🌀] CHANGE CYCLE #1
 ════════════════════════════════════════════
@@ -117,9 +123,11 @@ Choice	Interval	Mode
 [✓] MAC changed: 02:ab:cd:ef:12:34
 [→] Renewing IP address (DHCP)...
 [✓] New IP: 192.168.1.105
+
 📡 Current Status:
    MAC: 02:ab:cd:ef:12:34
    IP:  192.168.1.105
+
 [⏰] Next change in 30 seconds...
 ---
 🔍 Verification
