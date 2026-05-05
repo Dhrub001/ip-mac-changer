@@ -178,9 +178,11 @@ Choice	Interval	Mode
 🔍 Verification
 
 Watch MAC Changes
+
 watch -n 1 'ip link show eth0 | grep ether'
 
 Watch IP Changes
+
 watch -n 1 'ip -4 addr show eth0 | grep -oP "(?<=inet\s)\d+(\.\d+){3}"'
 
 ---
