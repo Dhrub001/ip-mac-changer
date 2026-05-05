@@ -134,14 +134,10 @@ Choice	Interval	Mode
 
 ---
 🎬 Example Output
-
-🎬 Example Output
-text
-
 ╔═══════════════════════════════════════════════════════════╗
-║        IP & MAC ADDRESS CHANGER v1.0                     ║
-║         Author: Dhrub Raj Giri (DRG)                     ║
-║              "HACK THE PLANET!"                          ║
+║        IP & MAC ADDRESS CHANGER v1.0                      ║
+║         Author: Dhrub Raj Giri (DRG)                      ║
+║              "HACK THE PLANET!"                           ║
 ╚═══════════════════════════════════════════════════════════╝
 
 [i] Interface: eth0
@@ -175,20 +171,17 @@ text
 
 [⏰] Next change in 30 seconds...
 
+---
+
 🔍 Verification
 Watch MAC Changes
-bash
-
 watch -n 1 'ip link show eth0 | grep ether'
 
 Watch IP Changes
-bash
-
 watch -n 1 'ip -4 addr show eth0 | grep -oP "(?<=inet\s)\d+(\.\d+){3}"'
 
+---
 Verify MAC Restore on Exit
-bash
-
 # Check original MAC
 ip link show eth0 | grep ether
 
@@ -197,10 +190,10 @@ ip link show eth0 | grep ether
 # Check MAC again
 ip link show eth0 | grep ether
 
+---
+
 🛠️ Troubleshooting
 MAC Change Failed
-bash
-
 # Find your interface name
 ip link show
 
@@ -210,8 +203,6 @@ sudo ip link set dev eth0 address 02:11:22:33:44:55
 sudo ip link set dev eth0 up
 
 DHCP Issues
-bash
-
 # Install DHCP client
 sudo apt install isc-dhcp-client
 
@@ -220,20 +211,10 @@ sudo dhclient -r eth0
 sudo dhclient eth0
 
 Permission Error
-bash
-
 # Always use sudo
 sudo ./ip-mac-pro
 
-📁 Project Structure
-text
-
-ip-mac-changer/
-├── ip-mac-pro     # Main script
-├── README.md      # Documentation
-├── LICENSE        # MIT License
-└── .gitignore     # Git exclusions
-
+---
 👤 Author
 
 Dhrub Raj Giri (DRG)
