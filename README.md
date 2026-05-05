@@ -133,7 +133,6 @@ Choice	Interval	Mode
 5.	Custom	Your own value
 
 ---
-
 🎬 Example Output
 
 ╔═══════════════════════════════════════════════════════════╗
@@ -160,7 +159,9 @@ Choice	Interval	Mode
 [✓] Interval: 30 seconds - Normal Mode
 
 ════════════════════════════════════════════
+
 [🌀] CHANGE CYCLE #1
+
 ════════════════════════════════════════════
 [→] Changing MAC address...
 [✓] MAC changed: 02:ab:cd:ef:12:34
