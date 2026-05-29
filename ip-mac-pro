@@ -1,7 +1,8 @@
+cat > /home/drg/LAB/ip-mac-changer/ip-mac-pro << 'EOF'
 #!/bin/bash
 
 # ============================================
-# IP & MAC Changer - Interactive Edition
+# IP, MAC & Location Changer - Enhanced Edition
 # Author: Dhrub Raj Giri (DRG)
 # GitHub: @Dhrub001
 # ============================================
@@ -25,9 +26,9 @@ echo "║   ▒ ░░▒ ░       ▒   ▒▒ ░    ░      ░  ▒    ▒
 echo "║   ▒ ░░░         ░   ▒     ░      ░         ░  ░░ ░  ░   ▒   ║"
 echo "║   ░                 ░  ░            ░ ░       ░  ░       ░ 3║"
 echo "║                                                           ║"
-echo "║        IP & MAC ADDRESS CHANGER v1.0                     ║"
+echo "║    IP, MAC & LOCATION CHANGER v2.0                       ║"
 echo "║         Author: Dhrub Raj Giri (DRG)                     ║"
-echo "║              \"HACK THE PLANET!\"                          ║"
+echo "║        \"DISAPPEAR WITHOUT A TRACE\"                       ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 sleep 2
@@ -37,62 +38,98 @@ INTERFACE=$(ip route | grep default | awk '{print $5}' | head -1)
 [ -z "$INTERFACE" ] && INTERFACE=$(ip link show | grep -v lo | grep "state UP" | head -1 | cut -d: -f2 | xargs)
 
 ORIGINAL_MAC=$(cat /sys/class/net/$INTERFACE/address 2>/dev/null)
+ORIGINAL_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
 
 echo -e "${CYAN}[i] Interface: ${GREEN}$INTERFACE${NC}"
 echo -e "${CYAN}[i] Original MAC: ${GREEN}$ORIGINAL_MAC${NC}"
+echo -e "${CYAN}[i] Original IP: ${GREEN}$ORIGINAL_IP${NC}"
 echo ""
 
-# Interval selection
+# Mode selection
 echo -e "${YELLOW}╔════════════════════════════════════════════════════════╗${NC}"
-echo -e "${YELLOW}║              SELECT CHANGE INTERVAL                    ║${NC}"
+echo -e "${YELLOW}║              SELECT OPERATION MODE                     ║${NC}"
 echo -e "${YELLOW}╚════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${CYAN}    1) ${GREEN}10 seconds${NC}  - Movie Mode (Very Fast)"
-echo -e "${CYAN}    2) ${GREEN}20 seconds${NC}  - Turbo Mode"
-echo -e "${CYAN}    3) ${GREEN}30 seconds${NC}  - Normal Mode ${YELLOW}(Recommended)${NC}"
-echo -e "${CYAN}    4) ${GREEN}60 seconds${NC}  - Stealth Mode"
-echo -e "${CYAN}    5) ${GREEN}Custom${NC}      - Enter your own value"
+echo -e "${CYAN}    1) ${GREEN}Full Anonymizer${NC}     - Change IP, MAC & Location (Tor)"
+echo -e "${CYAN}    2) ${GREEN}IP & MAC Only${NC}        - Just change IP and MAC"
+echo -e "${CYAN}    3) ${GREEN}Location Only${NC}        - Just change Tor exit node"
+echo -e "${CYAN}    4) ${GREEN}One Shot${NC}             - Change once and exit"
 echo ""
 
-read -p "$(echo -e ${CYAN}[?] Enter your choice [1-5]: ${NC})" CHOICE
+read -p "$(echo -e ${CYAN}[?] Enter your choice [1-4]: ${NC})" MODE_CHOICE
 
-case $CHOICE in
-    1) INTERVAL=10; MODE="Movie Mode (10 seconds)" ;;
-    2) INTERVAL=20; MODE="Turbo Mode (20 seconds)" ;;
-    3) INTERVAL=30; MODE="Normal Mode (30 seconds)" ;;
-    4) INTERVAL=60; MODE="Stealth Mode (60 seconds)" ;;
-    5) read -p "$(echo -e ${CYAN}[?] Enter custom seconds: ${NC})" INTERVAL
-       [[ ! "$INTERVAL" =~ ^[0-9]+$ ]] || [ "$INTERVAL" -lt 5 ] && INTERVAL=30
-       MODE="Custom (${INTERVAL} seconds)" ;;
-    *) INTERVAL=30; MODE="Normal Mode (30 seconds)" ;;
-esac
+# Interval selection (for continuous mode)
+if [[ "$MODE_CHOICE" != "4" ]]; then
+    echo ""
+    echo -e "${YELLOW}╔════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${YELLOW}║              SELECT CHANGE INTERVAL                    ║${NC}"
+    echo -e "${YELLOW}╚════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "${CYAN}    1) ${GREEN}30 seconds${NC}  - Fast Mode"
+    echo -e "${CYAN}    2) ${GREEN}60 seconds${NC}  - Normal Mode ${YELLOW}(Recommended)${NC}"
+    echo -e "${CYAN}    3) ${GREEN}300 seconds${NC} - Stealth Mode (5 minutes)"
+    echo -e "${CYAN}    4) ${GREEN}Custom${NC}      - Enter your own value"
+    echo ""
 
-echo ""
-echo -e "${GREEN}[✓] Interval: ${INTERVAL} seconds - ${MODE}${NC}"
-echo -e "${YELLOW}[!] Press Ctrl+C to stop and restore original MAC${NC}"
-echo ""
+    read -p "$(echo -e ${CYAN}[?] Enter your choice [1-4]: ${NC})" INT_CHOICE
 
-# Restore function
-restore_mac() {
-    echo -e "\n${YELLOW}[!] Restoring original MAC...${NC}"
-    sudo ip link set dev $INTERFACE down 2>/dev/null
-    sudo ip link set dev $INTERFACE address $ORIGINAL_MAC 2>/dev/null
-    sudo ip link set dev $INTERFACE up 2>/dev/null
-    echo -e "${GREEN}[✓] Original MAC restored: $ORIGINAL_MAC${NC}"
-    echo -e "${RED}[✗] IP & MAC Changer stopped${NC}"
-    exit 0
+    case $INT_CHOICE in
+        1) INTERVAL=30; MODE_DESC="Fast Mode (30 seconds)" ;;
+        2) INTERVAL=60; MODE_DESC="Normal Mode (60 seconds)" ;;
+        3) INTERVAL=300; MODE_DESC="Stealth Mode (5 minutes)" ;;
+        4) read -p "$(echo -e ${CYAN}[?] Enter custom seconds: ${NC})" INTERVAL
+           [[ ! "$INTERVAL" =~ ^[0-9]+$ ]] || [ "$INTERVAL" -lt 10 ] && INTERVAL=60
+           MODE_DESC="Custom (${INTERVAL} seconds)" ;;
+        *) INTERVAL=60; MODE_DESC="Normal Mode (60 seconds)" ;;
+    esac
+fi
+
+# Setup Tor for location changing
+setup_tor() {
+    echo -e "${CYAN}[→] Setting up Tor for location changing...${NC}"
+    systemctl unmask tor 2>/dev/null
+    systemctl start tor 2>/dev/null
+    
+    # Wait for Tor to be ready
+    for i in {1..10}; do
+        if curl --socks5-hostname localhost:9050 -s --max-time 2 https://check.torproject.org/ > /dev/null 2>&1; then
+            echo -e "${GREEN}[✓] Tor is ready${NC}"
+            return 0
+        fi
+        sleep 1
+    done
+    echo -e "${YELLOW}[!] Tor may still be bootstrapping...${NC}"
 }
-trap restore_mac SIGINT SIGTERM
 
-# Change MAC function
+# Get current location via Tor
+get_location() {
+    local location=$(curl --socks5-hostname localhost:9050 -s --max-time 5 "http://ip-api.com/line/?fields=country,city,isp" 2>/dev/null | head -3 | tr '\n' ' ')
+    if [ -n "$location" ]; then
+        echo "$location"
+    else
+        echo "Unknown"
+    fi
+}
+
+# Change Tor location (new exit node)
+change_location() {
+    echo -e "${CYAN}[→] Changing location (Tor circuit)...${NC}"
+    echo -e 'AUTHENTICATE ""\r\nSIGNAL NEWNYM\r\nQUIT' | nc -w 2 127.0.0.1 9051 2>/dev/null
+    sleep 3
+    
+    NEW_LOC=$(get_location)
+    echo -e "${GREEN}[✓] New location: ${NEW_LOC}${NC}"
+}
+
+# Change MAC address
 change_mac() {
     NEW_MAC=$(printf "02:%02x:%02x:%02x:%02x:%02x" $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)))
     echo -e "${CYAN}[→] Changing MAC address...${NC}"
-    sudo ip link set dev $INTERFACE down 2>/dev/null
-    sudo ip link set dev $INTERFACE address $NEW_MAC 2>/dev/null
-    sudo ip link set dev $INTERFACE up 2>/dev/null
+    ip link set dev $INTERFACE down 2>/dev/null
+    ip link set dev $INTERFACE address $NEW_MAC 2>/dev/null
+    ip link set dev $INTERFACE up 2>/dev/null
     sleep 1
-    if [ "$(cat /sys/class/net/$INTERFACE/address)" = "$NEW_MAC" ]; then
+    if [ "$(cat /sys/class/net/$INTERFACE/address 2>/dev/null)" = "$NEW_MAC" ]; then
         echo -e "${GREEN}[✓] MAC changed: ${NEW_MAC}${NC}"
         return 0
     else
@@ -101,39 +138,126 @@ change_mac() {
     fi
 }
 
-# Change IP function
+# Change IP address
 change_ip() {
-    echo -e "${CYAN}[→] Renewing IP address (DHCP)...${NC}"
-    sudo dhclient -r $INTERFACE 2>/dev/null
+    echo -e "${CYAN}[→] Renewing IP address...${NC}"
+    dhclient -r $INTERFACE 2>/dev/null
     sleep 1
-    sudo dhclient $INTERFACE 2>/dev/null
+    dhclient $INTERFACE 2>/dev/null
     sleep 2
     CURRENT_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
     if [ -n "$CURRENT_IP" ]; then
         echo -e "${GREEN}[✓] New IP: ${CURRENT_IP}${NC}"
         return 0
     else
-        echo -e "${YELLOW}[!] IP unchanged or no DHCP${NC}"
+        echo -e "${YELLOW}[!] IP unchanged${NC}"
         return 1
     fi
 }
 
-# Main loop
-COUNTER=0
-while true; do
-    COUNTER=$((COUNTER + 1))
-    echo ""
-    echo -e "${PURPLE}════════════════════════════════════════════${NC}"
-    echo -e "${BOLD}${CYAN}[🌀] CHANGE CYCLE #${COUNTER}${NC}"
-    echo -e "${PURPLE}════════════════════════════════════════════${NC}"
+# Restore original settings
+restore_all() {
+    echo -e "\n${YELLOW}[!] Restoring original settings...${NC}"
+    
+    # Restore MAC
+    ip link set dev $INTERFACE down 2>/dev/null
+    ip link set dev $INTERFACE address $ORIGINAL_MAC 2>/dev/null
+    ip link set dev $INTERFACE up 2>/dev/null
+    
+    # Restore IP via DHCP
+    dhclient -r $INTERFACE 2>/dev/null
+    dhclient $INTERFACE 2>/dev/null
+    
+    # Stop Tor
+    systemctl stop tor 2>/dev/null
+    systemctl mask tor 2>/dev/null
+    
+    echo -e "${GREEN}[✓] Original MAC restored: $ORIGINAL_MAC${NC}"
+    echo -e "${GREEN}[✓] Network restored${NC}"
+    echo -e "${RED}[✗] Anonymizer stopped${NC}"
+    exit 0
+}
+trap restore_all SIGINT SIGTERM
+
+# One-shot mode
+one_shot() {
+    echo -e "${BLUE}[*] One Shot Mode - Changing once${NC}"
     change_mac
-    sleep 2
     change_ip
-    echo ""
-    echo -e "${BLUE}📡 Current Status:${NC}"
-    echo -e "   MAC: ${GREEN}$(cat /sys/class/net/$INTERFACE/address)${NC}"
-    CURRENT_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
-    echo -e "   IP:  ${GREEN}${CURRENT_IP:-No IP assigned}${NC}"
-    echo -e "\n${YELLOW}[⏰] Next change in ${INTERVAL} seconds...${NC}"
-    sleep $INTERVAL
-done
+    
+    if [[ "$MODE_CHOICE" == "1" ]] || [[ "$MODE_CHOICE" == "3" ]]; then
+        setup_tor
+        change_location
+    fi
+    
+    echo -e "\n${GREEN}[✓] Changes applied!${NC}"
+    echo -e "New MAC: $(cat /sys/class/net/$INTERFACE/address)"
+    echo -e "New IP: $(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)"
+    exit 0
+}
+
+# Main continuous loop
+main_loop() {
+    COUNTER=0
+    while true; do
+        COUNTER=$((COUNTER + 1))
+        echo ""
+        echo -e "${PURPLE}════════════════════════════════════════════${NC}"
+        echo -e "${BOLD}${CYAN}[🌀] CHANGE CYCLE #${COUNTER}${NC}"
+        echo -e "${PURPLE}════════════════════════════════════════════${NC}"
+        
+        # Change MAC and IP
+        if [[ "$MODE_CHOICE" == "1" ]] || [[ "$MODE_CHOICE" == "2" ]]; then
+            change_mac
+            sleep 1
+            change_ip
+        fi
+        
+        # Change location if requested
+        if [[ "$MODE_CHOICE" == "1" ]] || [[ "$MODE_CHOICE" == "3" ]]; then
+            if [ "$COUNTER" -eq 1 ]; then
+                setup_tor
+            fi
+            change_location
+        fi
+        
+        # Show current status
+        echo ""
+        echo -e "${BLUE}📡 Current Status:${NC}"
+        echo -e "   MAC: ${GREEN}$(cat /sys/class/net/$INTERFACE/address 2>/dev/null)${NC}"
+        CURRENT_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+        echo -e "   IP:  ${GREEN}${CURRENT_IP:-No IP assigned}${NC}"
+        echo -e "   Location: ${GREEN}$(get_location)${NC}"
+        echo -e "\n${YELLOW}[⏰] Next change in ${INTERVAL} seconds...${NC}"
+        echo -e "${YELLOW}[!] Press Ctrl+C to stop and restore${NC}"
+        
+        sleep $INTERVAL
+    done
+}
+
+# Execute based on mode
+case $MODE_CHOICE in
+    1)  echo -e "${GREEN}[✓] Mode: Full Anonymizer (IP + MAC + Location)${NC}"
+        echo -e "${GREEN}[✓] Interval: ${MODE_DESC}${NC}"
+        sleep 2
+        main_loop
+        ;;
+    2)  echo -e "${GREEN}[✓] Mode: IP & MAC Only${NC}"
+        echo -e "${GREEN}[✓] Interval: ${MODE_DESC}${NC}"
+        sleep 2
+        main_loop
+        ;;
+    3)  echo -e "${GREEN}[✓] Mode: Location Only (Tor)${NC}"
+        echo -e "${GREEN}[✓] Interval: ${MODE_DESC}${NC}"
+        sleep 2
+        main_loop
+        ;;
+    4)  one_shot
+        ;;
+    *)  echo -e "${RED}[!] Invalid choice${NC}"
+        exit 1
+        ;;
+esac
+EOF
+
+chmod +x /home/drg/LAB/ip-mac-changer/ip-mac-pro
