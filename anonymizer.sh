@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # ============================================
-# Complete System Anonymizer 
+# Complete System Anonymizer
 # Author: Dhrub Raj Giri (DRG)
+# GitHub: @Dhrub001
 # ============================================
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
@@ -20,7 +21,6 @@ echo "╚═══════════════════════�
 echo -e "${NC}"
 sleep 2
 
-# Restore function
 restore_all() {
     echo -e "\n${YELLOW}[!] Restoring original settings...${NC}"
     ip link set $INTERFACE down 2>/dev/null
@@ -34,7 +34,6 @@ restore_all() {
 }
 trap restore_all SIGINT SIGTERM
 
-# Interval selection
 echo -e "${CYAN}Change interval (seconds):${NC}"
 echo "1) 30 seconds"
 echo "2) 60 seconds (recommended)"
@@ -48,7 +47,6 @@ case $INT_CHOICE in
     *) INTERVAL=60 ;;
 esac
 
-# Setup Tor
 systemctl unmask tor 2>/dev/null
 systemctl start tor 2>/dev/null
 
@@ -61,20 +59,17 @@ while true; do
     echo ""
     echo -e "${PURPLE}[🌀] Cycle #${COUNTER}${NC}"
     
-    # Change MAC
     NEW_MAC=$(printf "02:%02x:%02x:%02x:%02x:%02x" $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)) $((RANDOM%256)))
     ip link set $INTERFACE down 2>/dev/null
     ip link set $INTERFACE address $NEW_MAC 2>/dev/null
     ip link set $INTERFACE up 2>/dev/null
     echo -e "${GREEN}[✓] MAC: $NEW_MAC${NC}"
     
-    # Renew IP
     dhclient -r $INTERFACE 2>/dev/null
     dhclient $INTERFACE 2>/dev/null
     CURRENT_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
     echo -e "${GREEN}[✓] IP: $CURRENT_IP${NC}"
     
-    # Change Tor location
     echo -e 'AUTHENTICATE ""\r\nSIGNAL NEWNYM\r\nQUIT' | nc -w 2 127.0.0.1 9051 2>/dev/null
     echo -e "${GREEN}[✓] Location changed${NC}"
     
