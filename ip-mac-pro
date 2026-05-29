@@ -3,6 +3,7 @@
 # ============================================
 # IP, MAC & Location Changer
 # Author: Dhrub Raj Giri (DRG)
+# GitHub: @Dhrub001
 # Version: 2.0
 # ============================================
 
@@ -12,16 +13,30 @@ BOLD="\033[1m"; NC="\033[0m"
 
 INTERFACE=""
 ORIGINAL_MAC=""
+ORIGINAL_IP=""
+MODE_CHOICE=""
 
 show_banner() {
     clear
     echo -e "${PURPLE}"
     echo "╔═══════════════════════════════════════════════════════════╗"
+    echo "║                                                           ║"
+    echo "║   ██▓ ██▓███   ▄▄▄      ▄▄▄█████▓ ▄████▄   ██░ ██ ▄▄▄     ║"
+    echo "║  ▓██▒▓██░  ██▒▒████▄    ▓  ██▒ ▓▒▒██▀ ▀█  ▓██░ ██▒████▄   ║"
+    echo "║  ▒██▒▓██░ ██▓▒▒██  ▀█▄  ▒ ▓██░ ▒░▒▓█    ▄ ▒██▀▀██░▒██  ▀█▄ ║"
+    echo "║  ░██░▒██▄█▓▒ ▒░██▄▄▄▄██ ░ ▓██▓ ░ ▒▓▓▄ ▄██▒░▓█ ░██ ░██▄▄▄▄██║"
+    echo "║  ░██░▒██▒ ░  ░ ▓█   ▓██▒  ▒██▒ ░ ▒ ▓███▀ ░░▓█▒░██▓ ▓█   ▓██║"
+    echo "║  ░▓  ▒▓▒░ ░  ░ ▒▒   ▓▒█░  ▒ ░░   ░ ░▒ ▒  ░ ▒ ░░▒░▒ ▒▒   ▓▒█║"
+    echo "║   ▒ ░░▒ ░       ▒   ▒▒ ░    ░      ░  ▒    ▒ ░▒░ ░  ▒   ▒▒ ░║"
+    echo "║   ▒ ░░░         ░   ▒     ░      ░         ░  ░░ ░  ░   ▒   ║"
+    echo "║   ░                 ░  ░            ░ ░       ░  ░       ░ 3║"
+    echo "║                                                           ║"
     echo "║    IP, MAC & LOCATION CHANGER v2.0                       ║"
     echo "║         Author: Dhrub Raj Giri (DRG)                     ║"
+    echo "║        \"DISAPPEAR WITHOUT A TRACE\"                       ║"
     echo "╚═══════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
-    sleep 1
+    sleep 2
 }
 
 stop_all() {
@@ -31,21 +46,29 @@ stop_all() {
         ip link set dev $INTERFACE down 2>/dev/null
         ip link set dev $INTERFACE address $ORIGINAL_MAC 2>/dev/null
         ip link set dev $INTERFACE up 2>/dev/null
-        echo -e "${GREEN}[✓] MAC restored${NC}"
+        echo -e "${GREEN}[✓] MAC restored to: $ORIGINAL_MAC${NC}"
     fi
     
     dhclient -r $INTERFACE 2>/dev/null
     dhclient $INTERFACE 2>/dev/null
     
+    systemctl unmask tor 2>/dev/null
     systemctl stop tor 2>/dev/null
     systemctl disable tor 2>/dev/null
     
-    echo -e "${GREEN}[✓] Network restored${NC}"
+    pkill -f tor 2>/dev/null
+    
+    systemctl restart NetworkManager 2>/dev/null
+    
+    echo -e "${GREEN}[✓] Tor stopped and disabled${NC}"
+    echo -e "${GREEN}[✓] Network restored to normal${NC}"
+    echo -e "${RED}[✗] All services STOPPED${NC}"
     exit 0
 }
 
 setup_tor() {
     echo -e "${CYAN}[→] Starting Tor...${NC}"
+    systemctl unmask tor 2>/dev/null
     systemctl start tor 2>/dev/null
     sleep 3
 }
@@ -69,16 +92,29 @@ change_mac() {
 
 change_ip() {
     echo -e "${CYAN}[→] Renewing IP...${NC}"
+    
     dhclient -r $INTERFACE 2>/dev/null
-    sleep 1
-    dhclient $INTERFACE 2>/dev/null
     sleep 2
+    
+    ip addr flush $INTERFACE 2>/dev/null
+    sleep 1
+    
+    dhclient -1 -v $INTERFACE 2>/dev/null
+    sleep 3
+    
     CURRENT_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+    
+    if [ -z "$CURRENT_IP" ]; then
+        echo -e "${YELLOW}[!] DHCP failed, trying static IP...${NC}"
+        ip addr add 192.168.47.$((RANDOM % 200 + 50))/24 dev $INTERFACE 2>/dev/null
+        CURRENT_IP=$(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
+    fi
+    
     echo -e "${GREEN}[✓] New IP: $CURRENT_IP${NC}"
 }
 
 one_shot() {
-    echo -e "${BLUE}[*] One Shot Mode${NC}"
+    echo -e "${BLUE}[*] One Shot Mode - Changing once${NC}"
     change_mac
     change_ip
     
@@ -87,7 +123,11 @@ one_shot() {
         change_location
     fi
     
-    echo -e "\n${GREEN}[✓] Done${NC}"
+    echo -e "\n${GREEN}[✓] Changes applied${NC}"
+    echo -e "MAC: $(cat /sys/class/net/$INTERFACE/address 2>/dev/null)"
+    echo -e "IP: $(ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)"
+    
+    echo -e "\n${YELLOW}Run './ip-mac-pro --stop' to restore original settings${NC}"
     exit 0
 }
 
@@ -120,7 +160,6 @@ continuous_mode() {
     done
 }
 
-# Main
 if [[ "$1" == "--stop" ]] || [[ "$1" == "-s" ]]; then
     INTERFACE=$(ip route | grep default | awk '{print $5}' | head -1)
     ORIGINAL_MAC=$(cat /sys/class/net/$INTERFACE/address 2>/dev/null)
