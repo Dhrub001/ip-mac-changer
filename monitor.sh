@@ -1,124 +1,121 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# monitor.sh - live view of your MAC, local IP, public IP and Tor exit. No root needed.
+# Author: Dhrub Raj Giri (DRG)  https://github.com/Dhrub001
 
-# ============================================
-# Monitor IP, MAC & Location Changes
-# Author: Dhrub Raj Giri (DRG)
-# ============================================
+DIR=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
+# shellcheck source=lib.sh
+. "$DIR/lib.sh" || { echo "Cannot load lib.sh from $DIR" >&2; exit 1; }
 
-RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
-CYAN='\033[0;36m'; PURPLE='\033[0;35m'; BLUE='\033[0;34m'
-BOLD='\033[1m'; NC='\033[0m'
+IFACE_ARG=""
+REFRESH=2
+NET_EVERY=30     # public IP and Tor are checked this often, so the lookup sites are not hammered
+ONCE=0
 
-INTERFACE="eth0"
-LAST_MAC=""
-LAST_IP=""
-LAST_TOR_IP=""
+usage() {
+    cat <<EOF
+Usage: ./monitor.sh [options]
 
-clear
-echo -e "${PURPLE}"
-echo "╔═══════════════════════════════════════════════════════════╗"
-echo "║              NETWORK MONITOR - LIVE VIEW                  ║"
-echo "║         Author: Dhrub Raj Giri (DRG)                     ║"
-echo "╚═══════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
-echo ""
-
-get_mac() {
-    cat /sys/class/net/$INTERFACE/address 2>/dev/null
+Options:
+  -i, --iface NAME   network interface (default: the one with the default route)
+  -r, --refresh SEC  screen refresh in seconds (default 2)
+      --once         print one snapshot and exit
+  -h, --help         show this help
+EOF
 }
 
-get_local_ip() {
-    ip -4 addr show $INTERFACE 2>/dev/null | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1
+while [ $# -gt 0 ]; do
+    case $1 in
+        -i | --iface | -r | --refresh)
+            [ $# -ge 2 ] || die "Option $1 needs a value"
+            case $1 in -i | --iface) IFACE_ARG=$2 ;; *) REFRESH=$2 ;; esac
+            shift 2 ;;
+        --once) ONCE=1; shift ;;
+        -h | --help) usage; exit 0 ;;
+        *) err "Unknown option: $1"; usage >&2; exit 2 ;;
+    esac
+done
+[[ "$REFRESH" =~ ^[1-9][0-9]*$ ]] || die "The refresh time must be a whole number of seconds"
+
+need_cmds ip awk sed curl
+iface=$(detect_iface "$IFACE_ARG") || die "Network interface not found. List them with: ip link"
+
+declare -A LAST NOTE
+mac=""; lip=""; pub=""; tor_up=0; tor_ip=""; tor_is=""; tor_loc=""; loc_for=""; last_net=0
+
+track() {          # remember each value and note when it changes
+    local k=$1 v=$2
+    if [ -n "${LAST[$k]+x}" ] && [ "${LAST[$k]}" != "$v" ]; then
+        NOTE[$k]="changed from ${LAST[$k]:-none} at $(date +%H:%M:%S)"
+    fi
+    LAST[$k]=$v
 }
 
-get_public_ip() {
-    curl -s --max-time 3 ifconfig.me 2>/dev/null
-}
-
-get_tor_ip() {
-    curl --socks5-hostname localhost:9050 -s --max-time 3 ifconfig.me 2>/dev/null
-}
-
-get_tor_location() {
-    curl --socks5-hostname localhost:9050 -s --max-time 3 http://ip-api.com/line/?fields=country,city 2>/dev/null | head -2 | tr '\n' ' '
-}
-
-get_tor_status() {
-    if systemctl is-active tor >/dev/null 2>&1; then
-        echo -e "${GREEN}● RUNNING${NC}"
-    else
-        echo -e "${RED}○ STOPPED${NC}"
+line() {           # line LABEL VALUE [KEY]
+    printf '  %-14s %s\n' "$1" "${2:-unknown}"
+    if [ -n "${3:-}" ] && [ -n "${NOTE[$3]:-}" ]; then
+        printf '  %-14s %s%s%s\n' "" "$C_YELLOW" "${NOTE[$3]}" "$C_OFF"
     fi
 }
 
-while true; do
-    clear
-    echo -e "${PURPLE}════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BOLD}${CYAN}              NETWORK MONITOR - $(date '+%H:%M:%S')${NC}"
-    echo -e "${PURPLE}════════════════════════════════════════════════════════════${NC}"
-    echo ""
-    
-    # MAC Address
-    CURRENT_MAC=$(get_mac)
-    echo -e "${BLUE}┌─${NC} ${BOLD}[MAC ADDRESS]${NC}"
-    if [ "$CURRENT_MAC" != "$LAST_MAC" ] && [ -n "$LAST_MAC" ]; then
-        echo -e "│  ${RED}OLD: $LAST_MAC${NC}"
-        echo -e "│  ${GREEN}NEW: $CURRENT_MAC ${YELLOW}← CHANGED!${NC}"
-    else
-        echo -e "│  ${GREEN}$CURRENT_MAC${NC}"
-    fi
-    echo -e "${BLUE}└─────────────────────────────────────────────────────────────${NC}"
-    echo ""
-    
-    # Local IP
-    CURRENT_IP=$(get_local_ip)
-    echo -e "${BLUE}┌─${NC} ${BOLD}[LOCAL IP]${NC}"
-    if [ "$CURRENT_IP" != "$LAST_IP" ] && [ -n "$LAST_IP" ]; then
-        echo -e "│  ${RED}OLD: $LAST_IP${NC}"
-        echo -e "│  ${GREEN}NEW: $CURRENT_IP ${YELLOW}← CHANGED!${NC}"
-    else
-        echo -e "│  ${GREEN}$CURRENT_IP${NC}"
-    fi
-    echo -e "${BLUE}└─────────────────────────────────────────────────────────────${NC}"
-    echo ""
-    
-    # Public IP (Direct)
-    PUBLIC_IP=$(get_public_ip)
-    echo -e "${BLUE}┌─${NC} ${BOLD}[PUBLIC IP (Direct)]${NC}"
-    echo -e "│  ${CYAN}$PUBLIC_IP${NC}"
-    echo -e "${BLUE}└─────────────────────────────────────────────────────────────${NC}"
-    echo ""
-    
-    # Tor Status & IP
-    TOR_STATUS=$(get_tor_status)
-    echo -e "${BLUE}┌─${NC} ${BOLD}[TOR NETWORK]${NC}"
-    echo -e "│  Status: $TOR_STATUS"
-    
-    if systemctl is-active tor >/dev/null 2>&1; then
-        TOR_IP=$(get_tor_ip)
-        TOR_LOC=$(get_tor_location)
-        if [ "$TOR_IP" != "$LAST_TOR_IP" ] && [ -n "$LAST_TOR_IP" ]; then
-            echo -e "│  ${RED}OLD IP: $LAST_TOR_IP${NC}"
-            echo -e "│  ${GREEN}NEW IP: $TOR_IP ${YELLOW}← CHANGED!${NC}"
+refresh_net() {
+    local out
+    pub=$(public_ip)
+    if socks_up; then
+        tor_up=1
+        if out=$(tor_check); then
+            tor_is=${out%% *}
+            tor_ip=${out#* }
+            if [ "$tor_ip" != "$loc_for" ]; then tor_loc=$(tor_where "$tor_ip"); loc_for=$tor_ip; fi
         else
-            echo -e "│  IP: ${GREEN}$TOR_IP${NC}"
+            tor_is=""; tor_ip=""; tor_loc=""
         fi
-        echo -e "│  Location: ${GREEN}$TOR_LOC${NC}"
     else
-        echo -e "│  ${YELLOW}Tor not running. Start anonymizer to enable.${NC}"
+        tor_up=0; tor_is=""; tor_ip=""; tor_loc=""
     fi
-    echo -e "${BLUE}└─────────────────────────────────────────────────────────────${NC}"
-    echo ""
-    
-    # Legend
-    echo -e "${YELLOW}Legend:${NC}"
-    echo -e "${GREEN}●${NC} Changed / Running    ${RED}○${NC} Stopped"
-    echo -e ""
-    echo -e "${YELLOW}Press Ctrl+C to exit monitor${NC}"
-    
-    LAST_MAC="$CURRENT_MAC"
-    LAST_IP="$CURRENT_IP"
-    LAST_TOR_IP="$TOR_IP"
-    
-    sleep 2
+    last_net=$(date +%s)
+    track pub "$pub"
+    track torip "$tor_ip"
+}
+
+frame() {
+    printf '%sNetwork monitor%s    %s    interface %s\n\n' "$C_BOLD" "$C_OFF" "$(date +%H:%M:%S)" "$iface"
+    line "MAC address" "$mac" mac
+    line "Local IP" "${lip:-none}" lip
+    line "Public IP" "${pub:-unavailable} (direct, without Tor)" pub
+    echo
+    if [ "$tor_up" = 1 ]; then
+        line "Tor" "running"
+        if [ -n "$tor_ip" ]; then
+            line "Tor exit IP" "$tor_ip" torip
+            line "Tor location" "${tor_loc:-unknown}"
+            line "Tor check" "$([ "$tor_is" = true ] && echo 'confirmed by check.torproject.org' || echo 'NOT confirmed as Tor')"
+        else
+            line "Tor exit IP" "not connected yet"
+        fi
+    else
+        line "Tor" "not running (start it with: sudo ./ip-mac-pro)"
+    fi
+    printf '\n  Public IP and Tor were checked %ss ago.' "$(( $(date +%s) - last_net ))"
+    [ "$ONCE" = 1 ] || printf '  Press Ctrl+C to exit.'
+    echo
+}
+
+if [ "$ONCE" = 1 ]; then
+    mac=$(iface_mac "$iface"); lip=$(iface_ip "$iface")
+    refresh_net
+    frame
+    exit 0
+fi
+
+trap 'printf "\033[?25h\n"; exit 0' INT TERM
+printf '\033[?25l'
+while true; do
+    mac=$(iface_mac "$iface")
+    lip=$(iface_ip "$iface")
+    track mac "$mac"
+    track lip "$lip"
+    if [ $(( $(date +%s) - last_net )) -ge "$NET_EVERY" ]; then refresh_net; fi
+    out=$(frame)
+    printf '\033[H\033[J%s\n' "$out"
+    nap "$REFRESH"
 done
